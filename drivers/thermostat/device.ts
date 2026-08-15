@@ -1,7 +1,7 @@
 import Homey from "homey";
 import { OumanCloudClient } from "../../lib/ouman/OumanCloudClient";
 import { OpMode } from "../../lib/ouman/types";
-import { opModeToId, idToOpMode, isPowerOn, isHeating, type ModeId } from "./mapping";
+import { opModeToId, idToOpMode, isHeating, type ModeId } from "./mapping";
 
 const POLL_MS = 5 * 60 * 1000; // TODO: expose as a device setting
 
@@ -18,7 +18,6 @@ class ThermostatDevice extends Homey.Device {
     this.registerCapabilityListener("target_temperature.home", (v: number) => this.client.setHomeTarget(this.id(), v));
     this.registerCapabilityListener("target_temperature.away", (v: number) => this.client.setAwayTarget(this.id(), v));
     this.registerCapabilityListener("etherma_mode", (v: ModeId) => this.onMode(idToOpMode(v)));
-    this.registerCapabilityListener("onoff", (v: boolean) => this.onMode(v ? OpMode.Home : OpMode.AntiFreeze));
 
     await this.poll();
     this.pollTimer = this.homey.setInterval(() => this.poll().catch((e) => this.error(e)), POLL_MS);
@@ -52,7 +51,6 @@ class ThermostatDevice extends Homey.Device {
       await this.setCapabilityValue("target_temperature.home", state.setPoint);
       await this.setCapabilityValue("target_temperature.away", state.awaySetPoint);
       await this.setCapabilityValue("etherma_mode", opModeToId(state.opMode));
-      await this.setCapabilityValue("onoff", isPowerOn(state.opMode));
       await this.setCapabilityValue("etherma_heating", isHeating(latest.relayState));
       await this.setCapabilityValue("etherma_heating_level", latest.relayState);
       await this.setCapabilityValue("etherma_signal", latest.rssi);
@@ -84,7 +82,6 @@ class ThermostatDevice extends Homey.Device {
   private async onMode(mode: OpMode): Promise<void> {
     await this.client.setMode(this.id(), mode);
     await this.setCapabilityValue("etherma_mode", opModeToId(mode)).catch(() => {});
-    await this.setCapabilityValue("onoff", isPowerOn(mode)).catch(() => {});
   }
 }
 

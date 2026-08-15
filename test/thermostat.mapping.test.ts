@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { OpMode } from "../lib/ouman/types";
-import { opModeToId, idToOpMode, isPowerOn, isHeating } from "../drivers/thermostat/mapping";
+import { opModeToId, idToOpMode, isHeating } from "../drivers/thermostat/mapping";
 
 describe("mode mapping", () => {
   it("round-trips every OpMode <-> capability id", () => {
@@ -15,14 +15,7 @@ describe("mode mapping", () => {
   });
 });
 
-describe("onoff / heating derivations", () => {
-  it("power is on unless the mode is frost protection", () => {
-    expect(isPowerOn(OpMode.Home)).toBe(true);
-    expect(isPowerOn(OpMode.Away)).toBe(true);
-    expect(isPowerOn(OpMode.TimePlan)).toBe(true);
-    expect(isPowerOn(OpMode.AntiFreeze)).toBe(false);
-  });
-
+describe("heating derivation", () => {
   it("heating boolean reflects the relay level", () => {
     expect(isHeating(0)).toBe(false);
     expect(isHeating(100)).toBe(true);

@@ -27,11 +27,6 @@ export function idToOpMode(id: ModeId): OpMode {
   return ID_TO_MODE[id] ?? OpMode.Home;
 }
 
-/** onoff: the device is "on" unless it's in frost/off (AntiFreeze) mode. */
-export function isPowerOn(mode: OpMode): boolean {
-  return mode !== OpMode.AntiFreeze;
-}
-
 /** Boolean heating indicator derived from the 0-100 relay level. */
 export function isHeating(relayState: number): boolean {
   return relayState > 0;

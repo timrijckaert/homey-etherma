@@ -33,7 +33,6 @@
       },
       "class": "thermostat",
       "capabilities": [
-        "onoff",
         "etherma_mode",
         "target_temperature",
         "target_temperature.home",
