@@ -11,6 +11,9 @@ class ThermostatDriver extends Homey.Driver {
 
     // login_credentials view -> validate the Etherma e-mail/password via SRP.
     session.setHandler("login", async (data: { username: string; password: string }): Promise<boolean> => {
+      if (!data.username?.trim() || !data.password) {
+        throw new Error("Please enter your Etherma e-mail and password.");
+      }
       refreshToken = await client.login(data.username, data.password);
       return refreshToken.length > 0;
     });
