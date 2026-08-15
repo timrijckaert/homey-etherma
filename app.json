@@ -8,10 +8,10 @@
     "local"
   ],
   "name": {
-    "en": "Etherma"
+    "en": "ETHERMA"
   },
   "description": {
-    "en": "Control Etherma eTOUCH-PRO floor-heating thermostats."
+    "en": "Efficient. Electric. Heating."
   },
   "category": [
     "climate"
@@ -20,7 +20,8 @@
   "permissions": [],
   "images": {
     "small": "/assets/images/small.png",
-    "large": "/assets/images/large.png"
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
   },
   "author": {
     "name": "Tim Rijckaert"
@@ -87,7 +88,8 @@
       ],
       "images": {
         "small": "/drivers/thermostat/assets/images/small.png",
-        "large": "/drivers/thermostat/assets/images/large.png"
+        "large": "/drivers/thermostat/assets/images/large.png",
+        "xlarge": "/drivers/thermostat/assets/images/xlarge.png"
       },
       "pair": [
         {

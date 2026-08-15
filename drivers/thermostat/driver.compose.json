@@ -24,7 +24,8 @@
   "connectivity": ["cloud"],
   "images": {
     "small": "/drivers/thermostat/assets/images/small.png",
-    "large": "/drivers/thermostat/assets/images/large.png"
+    "large": "/drivers/thermostat/assets/images/large.png",
+    "xlarge": "/drivers/thermostat/assets/images/xlarge.png"
   },
   "pair": [
     {

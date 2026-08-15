@@ -5,17 +5,18 @@
   "sdk": 3,
   "platforms": ["local"],
   "name": {
-    "en": "Etherma"
+    "en": "ETHERMA"
   },
   "description": {
-    "en": "Control Etherma eTOUCH-PRO floor-heating thermostats."
+    "en": "Efficient. Electric. Heating."
   },
   "category": ["climate"],
   "brandColor": "#ED7811",
   "permissions": [],
   "images": {
     "small": "/assets/images/small.png",
-    "large": "/assets/images/large.png"
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
   },
   "author": {
     "name": "Tim Rijckaert"
