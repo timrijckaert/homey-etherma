@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Homey build output
+.homeybuild/
+
+# Homey app secrets / environment
+env.json
+
+# Local design & planning docs — kept out of the public repo
+docs/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# OS / editor cruft
+.DS_Store
+.idea/
+.vscode/
