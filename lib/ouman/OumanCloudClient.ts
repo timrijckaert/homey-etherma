@@ -104,6 +104,7 @@ export class OumanCloudClient {
     return {
       setPoint: r.setPoint / 10,
       awaySetPoint: r.awaySetPoint / 10,
+      currentSetPoint: r.currentSetPoint / 10,
       opMode: r.opMode as OpMode,
       displayName: r.displayName,
     };

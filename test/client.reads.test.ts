@@ -20,6 +20,7 @@ describe("reads", () => {
     const s = await c.getDeviceState("DEV1");
     expect(s.setPoint).toBe(40); // 400 -> 40.0 °C
     expect(s.awaySetPoint).toBe(5.5); // 55 -> 5.5 °C
+    expect(s.currentSetPoint).toBe(40); // active = home target in Home mode
     expect(s.opMode).toBe(OpMode.Home);
     expect(s.displayName).toBe("badkamer ");
   });

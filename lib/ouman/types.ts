@@ -30,6 +30,7 @@ export enum OpMode {
 export interface DeviceState {
   setPoint: number; // home comfort target, °C
   awaySetPoint: number; // away/eco target, °C
+  currentSetPoint: number; // active setpoint (follows opMode), °C
   opMode: OpMode;
   displayName: string;
 }
