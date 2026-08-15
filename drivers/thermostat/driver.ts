@@ -4,7 +4,7 @@ import { buildPairedDevices } from "./pairing";
 
 const TENANT = "etherma";
 
-export default class ThermostatDriver extends Homey.Driver {
+class ThermostatDriver extends Homey.Driver {
   async onPair(session: Homey.Driver.PairSession): Promise<void> {
     const client = new OumanCloudClient({ tenant: TENANT });
     let refreshToken = "";
@@ -22,3 +22,5 @@ export default class ThermostatDriver extends Homey.Driver {
     });
   }
 }
+
+export = ThermostatDriver;

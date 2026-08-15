@@ -5,7 +5,7 @@ import { opModeToId, idToOpMode, isPowerOn, isHeating, type ModeId } from "./map
 
 const POLL_MS = 5 * 60 * 1000; // TODO: expose as a device setting
 
-export default class ThermostatDevice extends Homey.Device {
+class ThermostatDevice extends Homey.Device {
   private client!: OumanCloudClient;
   private pollTimer?: NodeJS.Timeout;
 
@@ -87,3 +87,5 @@ export default class ThermostatDevice extends Homey.Device {
     await this.setCapabilityValue("onoff", isPowerOn(mode)).catch(() => {});
   }
 }
+
+export = ThermostatDevice;
