@@ -1,8 +1,26 @@
 import { discover } from "./discovery";
 import { srpLogin, refreshIdToken } from "./auth";
-import type { Endpoints } from "./types";
+import type { Endpoints, DeviceState, LatestData, DeviceSummary } from "./types";
 
 const REGION = "eu-west-1";
+
+/** A node in the getDeviceTree structure (org -> zone -> device). */
+interface TreeNode {
+  i?: { id?: string; type?: string; state?: { displayName?: string } };
+  c?: TreeNode[];
+}
+
+/** Depth-first walk collecting THERMOSTAT nodes, tagged with their nearest zone name. */
+function walkTree(nodes: TreeNode[], zoneName: string, out: DeviceSummary[]): void {
+  for (const node of nodes) {
+    const info = node.i ?? {};
+    const thisZone = info.state?.displayName ?? zoneName;
+    if (info.type === "THERMOSTAT" && info.id) {
+      out.push({ id: info.id, name: thisZone || info.id, zone: thisZone });
+    }
+    if (node.c) walkTree(node.c, thisZone, out);
+  }
+}
 
 /**
  * Homey-agnostic client for the Ouman cloud (Etherma and its OEM siblings).
@@ -63,5 +81,34 @@ export class OumanCloudClient {
     const body = (await res.json()) as { data?: T; errors?: unknown };
     if (body.errors) throw new Error(`GraphQL error: ${JSON.stringify(body.errors).slice(0, 200)}`);
     return body.data as T;
+  }
+
+  /** Enumerate the account's thermostats (walks the nested org/zone/device tree). */
+  async getDeviceTree(): Promise<DeviceSummary[]> {
+    const data = await this.gql<{ getDeviceTree: string }>("device", "query{getDeviceTree}", {});
+    const roots = JSON.parse(data.getDeviceTree) as TreeNode[];
+    const out: DeviceSummary[] = [];
+    walkTree(roots, "", out);
+    return out;
+  }
+
+  /** Read the reported/desired state (setpoints, mode) for a device. */
+  async getDeviceState(id: string): Promise<DeviceState> {
+    const data = await this.gql<{ getDeviceState: { reported: string } }>(
+      "device",
+      "query($id:ID!){getDeviceState(deviceId:$id){reported}}",
+      { id },
+    );
+    return JSON.parse(data.getDeviceState.reported) as DeviceState;
+  }
+
+  /** Read live telemetry (temps, relay, rssi) for a device. */
+  async getLatestData(id: string): Promise<LatestData> {
+    const data = await this.gql<{ getLatestData: { data: string } }>(
+      "data",
+      "query($id:String!){getLatestData(deviceId:$id){data}}",
+      { id },
+    );
+    return JSON.parse(data.getLatestData.data) as LatestData;
   }
 }

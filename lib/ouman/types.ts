@@ -18,3 +18,29 @@ export interface Endpoints {
   device: ServiceEndpoint;
   data: ServiceEndpoint;
 }
+
+/** Parsed `reported` desired/reported state (temps are 1/10 °C). */
+export interface DeviceState {
+  setPoint: number;
+  awaySetPoint: number;
+  opMode: number;
+  displayName: string;
+  currentSetPoint: number;
+}
+
+/** Parsed live telemetry (temps are 1/10 °C). */
+export interface LatestData {
+  currentTemp: number;
+  roomSensTemp: number;
+  floorSensTemp: number;
+  currentSetPoint: number;
+  relayState: number;
+  rssi: number;
+}
+
+/** A thermostat discovered in the device tree. */
+export interface DeviceSummary {
+  id: string;
+  name: string;
+  zone: string;
+}
