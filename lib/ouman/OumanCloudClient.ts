@@ -111,4 +111,23 @@ export class OumanCloudClient {
     );
     return JSON.parse(data.getLatestData.data) as LatestData;
   }
+
+  /** Send a partial desired-state change (AWSJSON), e.g. {"setPoint":215}. */
+  private async requestStateChange(id: string, partial: Record<string, number>): Promise<void> {
+    await this.gql<{ requestStateChange: unknown }>(
+      "device",
+      "mutation($id:ID!,$s:AWSJSON!){requestStateChange(deviceId:$id,state:$s,getFullState:false)}",
+      { id, s: JSON.stringify(partial) },
+    );
+  }
+
+  /** Set the home (`setPoint`) or away (`awaySetPoint`) target, in 1/10 °C. */
+  async setSetPoint(id: string, field: "setPoint" | "awaySetPoint", tenths: number): Promise<void> {
+    await this.requestStateChange(id, { [field]: tenths });
+  }
+
+  /** Set the operating mode (0 = Home, 1 = Away). */
+  async setOpMode(id: string, opMode: number): Promise<void> {
+    await this.requestStateChange(id, { opMode });
+  }
 }
