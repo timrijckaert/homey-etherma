@@ -1,0 +1,15 @@
+{
+  "type": "enum",
+  "title": { "en": "Mode" },
+  "uiComponent": "picker",
+  "getable": true,
+  "setable": true,
+  "insights": true,
+  "values": [
+    { "id": "home", "title": { "en": "Home" } },
+    { "id": "away", "title": { "en": "Away" } },
+    { "id": "timeplan", "title": { "en": "Schedule" } },
+    { "id": "antifreeze", "title": { "en": "Frost protection" } },
+    { "id": "energy", "title": { "en": "Energy management" } }
+  ]
+}

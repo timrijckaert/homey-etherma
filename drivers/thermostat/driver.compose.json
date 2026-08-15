@@ -1,0 +1,47 @@
+{
+  "name": { "en": "Floor heating thermostat" },
+  "class": "thermostat",
+  "capabilities": [
+    "onoff",
+    "etherma_mode",
+    "target_temperature",
+    "target_temperature.home",
+    "target_temperature.away",
+    "measure_temperature",
+    "measure_temperature.floor",
+    "etherma_heating",
+    "etherma_heating_level",
+    "etherma_signal"
+  ],
+  "capabilitiesOptions": {
+    "target_temperature": { "title": { "en": "Target" }, "min": 5, "max": 40, "step": 0.5 },
+    "target_temperature.home": { "title": { "en": "Home target" }, "min": 5, "max": 40, "step": 0.5 },
+    "target_temperature.away": { "title": { "en": "Away target" }, "min": 5, "max": 40, "step": 0.5 },
+    "measure_temperature": { "title": { "en": "Room temperature" } },
+    "measure_temperature.floor": { "title": { "en": "Floor temperature" } }
+  },
+  "platforms": ["local"],
+  "connectivity": ["cloud"],
+  "images": {
+    "small": "/drivers/thermostat/assets/images/small.png",
+    "large": "/drivers/thermostat/assets/images/large.png"
+  },
+  "pair": [
+    {
+      "id": "login_credentials",
+      "template": "login_credentials",
+      "options": {
+        "usernameLabel": { "en": "Etherma e-mail" },
+        "passwordLabel": { "en": "Etherma password" }
+      },
+      "navigation": { "next": "list_devices" }
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": { "next": "add_devices" },
+      "options": { "singular": true }
+    },
+    { "id": "add_devices", "template": "add_devices" }
+  ]
+}

@@ -11,7 +11,12 @@
     "en": "Control Etherma eTOUCH-PRO floor-heating thermostats."
   },
   "category": ["climate"],
+  "brandColor": "#E2001A",
   "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png"
+  },
   "author": {
     "name": "Tim Rijckaert"
   }

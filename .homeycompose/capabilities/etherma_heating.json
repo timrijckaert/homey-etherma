@@ -1,0 +1,10 @@
+{
+  "type": "boolean",
+  "title": { "en": "Heating" },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "insightsTitleTrue": { "en": "Heating" },
+  "insightsTitleFalse": { "en": "Idle" }
+}

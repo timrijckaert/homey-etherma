@@ -1,0 +1,216 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "app.timrijckaert.etherma",
+  "version": "0.1.0",
+  "compatibility": ">=12.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Etherma"
+  },
+  "description": {
+    "en": "Control Etherma eTOUCH-PRO floor-heating thermostats."
+  },
+  "category": [
+    "climate"
+  ],
+  "brandColor": "#E2001A",
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png"
+  },
+  "author": {
+    "name": "Tim Rijckaert"
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Floor heating thermostat"
+      },
+      "class": "thermostat",
+      "capabilities": [
+        "onoff",
+        "etherma_mode",
+        "target_temperature",
+        "target_temperature.home",
+        "target_temperature.away",
+        "measure_temperature",
+        "measure_temperature.floor",
+        "etherma_heating",
+        "etherma_heating_level",
+        "etherma_signal"
+      ],
+      "capabilitiesOptions": {
+        "target_temperature": {
+          "title": {
+            "en": "Target"
+          },
+          "min": 5,
+          "max": 40,
+          "step": 0.5
+        },
+        "target_temperature.home": {
+          "title": {
+            "en": "Home target"
+          },
+          "min": 5,
+          "max": 40,
+          "step": 0.5
+        },
+        "target_temperature.away": {
+          "title": {
+            "en": "Away target"
+          },
+          "min": 5,
+          "max": 40,
+          "step": 0.5
+        },
+        "measure_temperature": {
+          "title": {
+            "en": "Room temperature"
+          }
+        },
+        "measure_temperature.floor": {
+          "title": {
+            "en": "Floor temperature"
+          }
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/thermostat/assets/images/small.png",
+        "large": "/drivers/thermostat/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "login_credentials",
+          "template": "login_credentials",
+          "options": {
+            "usernameLabel": {
+              "en": "Etherma e-mail"
+            },
+            "passwordLabel": {
+              "en": "Etherma password"
+            }
+          },
+          "navigation": {
+            "next": "list_devices"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          },
+          "options": {
+            "singular": true
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "thermostat"
+    }
+  ],
+  "capabilities": {
+    "etherma_heating": {
+      "type": "boolean",
+      "title": {
+        "en": "Heating"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "insightsTitleTrue": {
+        "en": "Heating"
+      },
+      "insightsTitleFalse": {
+        "en": "Idle"
+      }
+    },
+    "etherma_heating_level": {
+      "type": "number",
+      "title": {
+        "en": "Heating level"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "units": {
+        "en": "%"
+      },
+      "min": 0,
+      "max": 100,
+      "decimals": 0
+    },
+    "etherma_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Mode"
+      },
+      "uiComponent": "picker",
+      "getable": true,
+      "setable": true,
+      "insights": true,
+      "values": [
+        {
+          "id": "home",
+          "title": {
+            "en": "Home"
+          }
+        },
+        {
+          "id": "away",
+          "title": {
+            "en": "Away"
+          }
+        },
+        {
+          "id": "timeplan",
+          "title": {
+            "en": "Schedule"
+          }
+        },
+        {
+          "id": "antifreeze",
+          "title": {
+            "en": "Frost protection"
+          }
+        },
+        {
+          "id": "energy",
+          "title": {
+            "en": "Energy management"
+          }
+        }
+      ]
+    },
+    "etherma_signal": {
+      "type": "number",
+      "title": {
+        "en": "WiFi signal"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "units": {
+        "en": "dBm"
+      },
+      "decimals": 0
+    }
+  }
+}
