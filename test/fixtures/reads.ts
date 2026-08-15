@@ -1,17 +1,17 @@
-// Real field shapes captured live 2026-08-15. Identifiers sanitized — no real
-// device UUID / organisation id / MAC / serial reaches the public repo. The
-// numeric values (temps, setpoints, opMode) are kept real so the parsing tests
-// reflect actual data.
+// Real field shapes captured live 2026-08-15 (a "Home / heating" snapshot).
+// Identifiers sanitized — no real device UUID / organisation id / MAC / serial
+// reaches the public repo. Numeric values are raw wire values (temps in 1/10 °C,
+// relayState as a 0-100 percentage); the client normalizes them.
 
 export const DEVICE_STATE_REPORTED = JSON.stringify({
   deviceId: "DEV1",
-  setPoint: 395, // 39.5 °C home comfort target (a floor target)
+  setPoint: 400, // 40.0 °C home comfort target (a floor target)
   setRegP: 10,
   awaySetPoint: 55, // 5.5 °C away/frost target
   tempUnit: 0, // Celsius
-  opMode: 1, // Away
+  opMode: 0, // Home
   displayName: "badkamer ",
-  currentSetPoint: 55, // == awaySetPoint since opMode=1
+  currentSetPoint: 400,
   devType: "EE-MOD-WIFI-TFT",
   macAddr: "AABBCCDDEEFF",
   serialNum: "0000000000",
@@ -22,17 +22,17 @@ export const DEVICE_STATE_REPORTED = JSON.stringify({
 
 export const LATEST_DATA = JSON.stringify({
   subDevices: [],
-  currentSetPoint: 55,
-  currentTemp: 268, // 26.8 °C (== roomSensTemp; the app's "current temperature")
-  deviceState: 261,
-  floorSensTemp: 238, // 23.8 °C
-  relayOnTime: 247155,
-  relayState: 0,
-  roomSensTemp: 268,
-  roomSensTempRaw: 304,
-  rssi: -45,
-  compSensTemp: 317,
-  espSensorTemp: 340,
+  currentSetPoint: 400,
+  currentTemp: 260, // 26.0 °C (room; the app's "current temperature")
+  deviceState: 5,
+  floorSensTemp: 239, // 23.9 °C
+  relayOnTime: 247282,
+  relayState: 100, // heating at 100% (0-100 scale, NOT 0/1)
+  roomSensTemp: 260,
+  roomSensTempRaw: 303,
+  rssi: -46,
+  compSensTemp: 337,
+  espSensorTemp: 339,
 });
 
 // getDeviceTree returns an AWSJSON *string* of a nested org -> zone -> device tree.

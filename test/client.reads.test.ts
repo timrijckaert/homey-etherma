@@ -1,8 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { OumanCloudClient } from "../lib/ouman/OumanCloudClient";
+import { OpMode } from "../lib/ouman/types";
 import { DEVICE_STATE_REPORTED, LATEST_DATA, DEVICE_TREE_JSON } from "./fixtures/reads";
 
-// Override the transport with fixtures so we test parsing only.
+// Override the transport with fixtures so we test parsing/normalization only.
 class TestClient extends OumanCloudClient {
   protected async gql(_service: any, query: string, _variables: any): Promise<any> {
     if (query.includes("getDeviceState")) return { getDeviceState: { reported: DEVICE_STATE_REPORTED } };
@@ -15,20 +16,20 @@ class TestClient extends OumanCloudClient {
 describe("reads", () => {
   const c = new TestClient({ tenant: "etherma", refreshToken: "RT" });
 
-  it("parses device state from the AWSJSON reported string", async () => {
+  it("parses device state and normalizes temps to °C, mode to OpMode", async () => {
     const s = await c.getDeviceState("DEV1");
-    expect(s.setPoint).toBe(395);
-    expect(s.awaySetPoint).toBe(55);
-    expect(s.opMode).toBe(1);
+    expect(s.setPoint).toBe(40); // 400 -> 40.0 °C
+    expect(s.awaySetPoint).toBe(5.5); // 55 -> 5.5 °C
+    expect(s.opMode).toBe(OpMode.Home);
     expect(s.displayName).toBe("badkamer ");
   });
 
-  it("parses latest data from the AWSJSON data string", async () => {
+  it("parses latest data: temps in °C, relayState as a 0-100 number", async () => {
     const d = await c.getLatestData("DEV1");
-    expect(d.currentTemp).toBe(268);
-    expect(d.roomSensTemp).toBe(268);
-    expect(d.floorSensTemp).toBe(238);
-    expect(d.relayState).toBe(0);
+    expect(d.currentTemp).toBe(26); // 260 -> 26.0 °C
+    expect(d.floorSensTemp).toBe(23.9); // 239 -> 23.9 °C
+    expect(d.relayState).toBe(100); // percentage, not 0/1
+    expect(d.rssi).toBe(-46);
   });
 
   it("walks the nested device tree and extracts thermostats with their zone", async () => {

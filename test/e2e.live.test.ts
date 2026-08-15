@@ -38,6 +38,8 @@ maybe("live e2e read flow (requires env.json)", () => {
       const latest = await client.getLatestData(id);
       expect(typeof latest.currentTemp).toBe("number");
       expect(typeof latest.floorSensTemp).toBe("number");
+      expect(typeof latest.relayState).toBe("number"); // 0-100 %
+      expect(typeof latest.rssi).toBe("number");
     },
     20000, // SRP handshake + several round-trips to a sleepy device
   );

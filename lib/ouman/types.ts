@@ -1,41 +1,45 @@
 export type ServiceName = "users" | "device" | "data" | "events" | "ota";
 
-export interface UsersEndpoint {
-  endpoint: string;
+/** Cognito config for a tenant — only the fields we use for auth. */
+export interface UsersConfig {
   clientId: string;
   userPoolId: string;
-  identityPoolId: string;
-  minClientVersion: string;
 }
 
+/** A GraphQL service's endpoint. */
 export interface ServiceEndpoint {
   endpoint: string;
-  minClientVersion: string;
 }
 
 export interface Endpoints {
-  users: UsersEndpoint;
+  users: UsersConfig;
   device: ServiceEndpoint;
   data: ServiceEndpoint;
 }
 
-/** Parsed `reported` desired/reported state (temps are 1/10 °C). */
-export interface DeviceState {
-  setPoint: number;
-  awaySetPoint: number;
-  opMode: number;
-  displayName: string;
-  currentSetPoint: number;
+/** Device operating mode. Numeric values match the wire protocol (verified live + against the magneei/heatit reference). */
+export enum OpMode {
+  Home = 0, // normal heating, uses setPoint
+  Away = 1, // reduced, uses awaySetPoint
+  TimePlan = 2, // weekly schedule
+  AntiFreeze = 3, // frost protection (our "off")
+  EnergyMgmt = 4, // energy management
 }
 
-/** Parsed live telemetry (temps are 1/10 °C). */
+/** Reported/desired device state. Temperatures are °C. */
+export interface DeviceState {
+  setPoint: number; // home comfort target, °C
+  awaySetPoint: number; // away/eco target, °C
+  opMode: OpMode;
+  displayName: string;
+}
+
+/** Live telemetry. Temperatures are °C. */
 export interface LatestData {
-  currentTemp: number;
-  roomSensTemp: number;
-  floorSensTemp: number;
-  currentSetPoint: number;
-  relayState: number;
-  rssi: number;
+  currentTemp: number; // room air, °C
+  floorSensTemp: number; // floor probe, °C
+  relayState: number; // heating level, 0-100 % (0 = idle)
+  rssi: number; // WiFi signal, dBm
 }
 
 /** A thermostat discovered in the device tree. */

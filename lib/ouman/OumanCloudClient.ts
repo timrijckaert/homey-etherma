@@ -1,5 +1,6 @@
 import { discover } from "./discovery";
 import { srpLogin, refreshIdToken } from "./auth";
+import { OpMode } from "./types";
 import type { Endpoints, DeviceState, LatestData, DeviceSummary } from "./types";
 
 const REGION = "eu-west-1";
@@ -92,24 +93,36 @@ export class OumanCloudClient {
     return out;
   }
 
-  /** Read the reported/desired state (setpoints, mode) for a device. */
+  /** Read the reported/desired state, normalized to °C and a typed OpMode. */
   async getDeviceState(id: string): Promise<DeviceState> {
     const data = await this.gql<{ getDeviceState: { reported: string } }>(
       "device",
       "query($id:ID!){getDeviceState(deviceId:$id){reported}}",
       { id },
     );
-    return JSON.parse(data.getDeviceState.reported) as DeviceState;
+    const r = JSON.parse(data.getDeviceState.reported);
+    return {
+      setPoint: r.setPoint / 10,
+      awaySetPoint: r.awaySetPoint / 10,
+      opMode: r.opMode as OpMode,
+      displayName: r.displayName,
+    };
   }
 
-  /** Read live telemetry (temps, relay, rssi) for a device. */
+  /** Read live telemetry, temps normalized to °C. relayState is 0-100 %. */
   async getLatestData(id: string): Promise<LatestData> {
     const data = await this.gql<{ getLatestData: { data: string } }>(
       "data",
       "query($id:String!){getLatestData(deviceId:$id){data}}",
       { id },
     );
-    return JSON.parse(data.getLatestData.data) as LatestData;
+    const d = JSON.parse(data.getLatestData.data);
+    return {
+      currentTemp: d.currentTemp / 10,
+      floorSensTemp: d.floorSensTemp / 10,
+      relayState: d.relayState,
+      rssi: d.rssi,
+    };
   }
 
   /** Send a partial desired-state change (AWSJSON), e.g. {"setPoint":215}. */
@@ -121,13 +134,18 @@ export class OumanCloudClient {
     );
   }
 
-  /** Set the home (`setPoint`) or away (`awaySetPoint`) target, in 1/10 °C. */
-  async setSetPoint(id: string, field: "setPoint" | "awaySetPoint", tenths: number): Promise<void> {
-    await this.requestStateChange(id, { [field]: tenths });
+  /** Set the home comfort target, in °C. */
+  async setHomeTarget(id: string, celsius: number): Promise<void> {
+    await this.requestStateChange(id, { setPoint: Math.round(celsius * 10) });
   }
 
-  /** Set the operating mode (0 = Home, 1 = Away). */
-  async setOpMode(id: string, opMode: number): Promise<void> {
-    await this.requestStateChange(id, { opMode });
+  /** Set the away/eco target, in °C. */
+  async setAwayTarget(id: string, celsius: number): Promise<void> {
+    await this.requestStateChange(id, { awaySetPoint: Math.round(celsius * 10) });
+  }
+
+  /** Set the operating mode. */
+  async setMode(id: string, mode: OpMode): Promise<void> {
+    await this.requestStateChange(id, { opMode: mode });
   }
 }

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { OumanCloudClient } from "../lib/ouman/OumanCloudClient";
+import { OpMode } from "../lib/ouman/types";
 
 // Capture the transport call so we can assert the exact payload shaping.
 class CaptureClient extends OumanCloudClient {
@@ -11,23 +12,29 @@ class CaptureClient extends OumanCloudClient {
 }
 
 describe("writes", () => {
-  it("shapes a setPoint write as an AWSJSON partial state", async () => {
+  it("setHomeTarget converts °C to the setPoint wire value", async () => {
     const c = new CaptureClient({ tenant: "etherma", refreshToken: "RT" });
-    await c.setSetPoint("DEV1", "setPoint", 215);
+    await c.setHomeTarget("DEV1", 21.5);
     expect(c.captured!.query).toContain("requestStateChange");
     expect(c.captured!.variables.id).toBe("DEV1");
     expect(c.captured!.variables.s).toBe('{"setPoint":215}');
   });
 
-  it("shapes an awaySetPoint write", async () => {
+  it("setAwayTarget converts °C to the awaySetPoint wire value", async () => {
     const c = new CaptureClient({ tenant: "etherma", refreshToken: "RT" });
-    await c.setSetPoint("DEV1", "awaySetPoint", 130);
+    await c.setAwayTarget("DEV1", 13);
     expect(c.captured!.variables.s).toBe('{"awaySetPoint":130}');
   });
 
-  it("shapes an opMode write", async () => {
+  it("setMode writes the OpMode numeric value", async () => {
     const c = new CaptureClient({ tenant: "etherma", refreshToken: "RT" });
-    await c.setOpMode("DEV1", 1);
+    await c.setMode("DEV1", OpMode.Away);
     expect(c.captured!.variables.s).toBe('{"opMode":1}');
+  });
+
+  it("rounds fractional °C to the nearest 1/10 on write", async () => {
+    const c = new CaptureClient({ tenant: "etherma", refreshToken: "RT" });
+    await c.setHomeTarget("DEV1", 21.54);
+    expect(c.captured!.variables.s).toBe('{"setPoint":215}');
   });
 });
